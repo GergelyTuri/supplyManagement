@@ -38,12 +38,8 @@ class GoogleSheetsClient:
         sheet = self.get_worksheet(sheet_name)
         return sheet.row_values(1)
 
-
-# Instantiate the client once and use its methods to interact with the spreadsheet
-# sheets_client = GoogleSheetsClient()
-
-# Example usage
-# data = sheets_client.get_all_records("Sheet1")
-# filtered_data = sheets_client.get_filtered_records("Sheet1", {"Vendor": "upenn"})
-# sheet_names = sheets_client.get_all_sheet_names()
-# columns = sheets_client.get_all_columns("Sheet1")
+    def get_column_values(self, sheet_name, column_name):
+        sheet = self.get_worksheet(sheet_name)
+        column_names = sheet.row_values(1)
+        column_index = column_names.index(column_name) + 1
+        return sheet.col_values(column_index)

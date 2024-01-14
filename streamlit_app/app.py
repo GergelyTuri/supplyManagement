@@ -1,51 +1,34 @@
-import requests
+import pandas as pd
 import streamlit as st
+from helpers import FastAPIClient, Styling
 
-
-# Function to fetch data from your FastAPI backend
-def fetch_data(sheet, column, value):
-    response = requests.get(
-        f"http://127.0.0.1:8000/filtered_data/{sheet}?{column}={value}"
-    )
-    return response.json()
-
-
-def fetch_sheet_names():
-    response = requests.get("http://127.0.0.1:8000/sheets")
-    return response.json()
-
-
-def fetch_column_names(sheet_name):
-    response = requests.get(f"http://127.0.0.1:8000/columns/{sheet_name}")
-    return response.json()
-
-
-def fetch_column_values(sheet_name, column_name):
-    response = requests.get(
-        f"http://127.0.0.1:8000/column_values/{sheet_name}/{column_name}"
-    )
-    return response.json()
-
+client = FastAPIClient()
 
 # Streamlit UI
 st.title("Supply Management Dashboard")
 
-# Use the helper functions to fetch data for dropdowns
-# Dropdown for sheets
-sheet_names = fetch_sheet_names()
-selected_sheet = st.selectbox("Select a Sheet", sheet_names)
+# Sidebar for navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio(
+    "Go to",
+    ["Home", "Databeses", "Search Database by value", "Search Database by strings"],
+)
 
-# Dropdown for columns, show only if sheet is selected
-if selected_sheet:
-    column_names = fetch_column_names(selected_sheet)
-    selected_column = st.selectbox("Select a Column", column_names)
+# Display content based on navigation choice
+if page == "Home":
+    Styling.render_home_page()
+elif page == "Databeses":
+    Styling.render_databases_page(client)
+elif page == "Search Database by value":
+    Styling.render_value_search_page(client)
+elif page == "Search Database by strings":
+    Styling.render_string_search_page(client)
 
-    # Dropdown for values, show only if column is selected
-    if selected_column:
-        column_values = fetch_column_values(selected_sheet, selected_column)
-        selected_value = st.selectbox("Select a Value", column_values)
-
-        # Button to fetch data
-        if st.button("Get Data"):
-            data = fetch_data(selected_sheet, selected_column, selected_value)
-            st.write(data)
+footer = """
+    <div style="background-color: lightgrey; padding: 10px; 
+                position: fixed; left: 0; bottom: 0; width: 100%; 
+                text-align: center;">
+        <p>Contact us at <a href="mailto:gt2253@cumc.columbia.edu">Gergo</a></p>
+    </div>
+    """
+st.markdown(footer, unsafe_allow_html=True)
