@@ -1,52 +1,49 @@
 import gspread
 
 SPREADSHEET = "Supply database"
+CREDENTIALS_FILE = "C:\\Users\\Gergo_PC\\Documents\\code\\service_acct_keys\\elegant-tendril-245600-75201e93f704.json"
 
 
-def get_google_sheets_client():
-    """
-    Returns a Google Sheets client object authenticated with a service account key.
+class GoogleSheetsClient:
+    def __init__(self):
+        self.gc = gspread.service_account(filename=CREDENTIALS_FILE)
+        self.spreadsheet = self.gc.open(SPREADSHEET)
 
-    :return: Google Sheets client object
-    """
-    gc = gspread.service_account(
-        filename="C:\\Users\\Gergo_PC\\Documents\\code\\service_acct_keys\\elegant-tendril-245600-75201e93f704.json"
-    )
-    return gc
+    def get_worksheet(self, sheet_name):
+        try:
+            return self.spreadsheet.worksheet(sheet_name)
+        except gspread.exceptions.WorksheetNotFound:
+            raise ValueError(f"Sheet '{sheet_name}' not found in spreadsheet.")
 
+    def get_all_records(self, sheet_name):
+        sheet = self.get_worksheet(sheet_name)
+        return sheet.get_all_records()
 
-def get_spreadsheet_data(sheet_name):
-    client = get_google_sheets_client()
-    sheet = client.open(SPREADSHEET).worksheet(sheet_name)
-    data = sheet.get_all_records()
-    return data
+    def get_filtered_records(self, sheet_name, filters):
+        data = self.get_all_records(sheet_name)
 
-
-def get_filtered_spreadsheet_data(sheet_name, filters):
-    data = get_spreadsheet_data(sheet_name)
-
-    if filters:
         for key, value in filters.items():
             data = [
                 row
                 for row in data
                 if str(row.get(key, "")).lower() == str(value).lower()
             ]
+
         return data
-    else:
-        return data
+
+    def get_all_sheet_names(self):
+        return [sheet.title for sheet in self.spreadsheet.worksheets()]
+
+    def get_all_columns(self, sheet_name):
+        sheet = self.get_worksheet(sheet_name)
+        return sheet.row_values(1)
 
 
-def get_all_sheet_names():
-    client = get_google_sheets_client()
-    spreadsheet = client.open(SPREADSHEET)
-    sheet_names = [sheet.title for sheet in spreadsheet.worksheets()]
-    return sheet_names
+# Instantiate the client once and use its methods to interact with the spreadsheet
+# sheets_client = GoogleSheetsClient()
 
-
-def get_all_columns(sheet_name):
-    client = get_google_sheets_client()
-    spreadsheet = client.open(SPREADSHEET)
-    sheet = spreadsheet.worksheet(sheet_name)
-    columns = sheet.row_values(1)
-    return columns
+# Example usage
+# data = sheets_client.get_all_records("Sheet1")
+# filtered_data = sheets_client.get_filtered_records("Sheet1", {"Vendor": "upenn"})
+# sheet_names = sheets_client.get_all_sheet_names()
+# columns = sheets_client.get_all_columns("Sheet1")

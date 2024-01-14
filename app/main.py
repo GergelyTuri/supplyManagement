@@ -1,30 +1,28 @@
 from fastapi import FastAPI, Request
 
-from .sheets_manager import (
-    get_all_sheet_names,
-    get_filtered_spreadsheet_data,
-    get_spreadsheet_data,
-)
+from .sheets_manager import GoogleSheetsClient
 
 app = FastAPI()
+
+sheets_client = GoogleSheetsClient()
 
 
 @app.get("/data/{sheet_name}")
 def read_all_data(sheet_name: str):
-    data = get_spreadsheet_data(sheet_name)
+    data = sheets_client.get_all_records(sheet_name)
     return data
 
 
 @app.get("/filtered_data/{sheet_name}")
 def read_filtered_data(sheet_name: str, request: Request):
     filters = dict(request.query_params)
-    data = get_filtered_spreadsheet_data(sheet_name, filters)
+    data = sheets_client.get_filtered_records(sheet_name, filters)
     return data
 
 
 @app.get("/sheets")
 def get_sheet_names():
-    return get_all_sheet_names()
+    return sheets_client.get_all_sheet_names()
 
 
 @app.get("/columns/{sheet_name}")
