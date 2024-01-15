@@ -7,6 +7,11 @@ app = FastAPI()
 sheets_client = GoogleSheetsClient()
 
 
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
 @app.get("/data/{sheet_name}")
 def read_all_data(sheet_name: str):
     data = sheets_client.get_all_records(sheet_name)
