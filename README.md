@@ -9,7 +9,7 @@ This is a supply management system for a small lab. It is built using FastApi fr
 ### Requirements
 
 Anaconda is recommended for installation.
-The list of the required packages is in the requirements.txt file.
+The list of the required packages is in the `requirements.txt` file.
 
 ## Usage
 
@@ -24,3 +24,13 @@ uvicorn app.main:app --reload
 ```bash
 streamlit run app.py
 ```
+
+## Production setup
+
+### FastApi
+
+This is currently running on Google Cloud.
+
+### Streamlit
+
+This is currently running on Steramlit Community Cloud.

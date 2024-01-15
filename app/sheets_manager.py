@@ -1,13 +1,28 @@
+import json
+import os
+
 import gspread
+from google.cloud import secretmanager
 
 SPREADSHEET = "Supply database"
-CREDENTIALS_FILE = "C:\\Users\\Gergo_PC\\Documents\\code\\service_acct_keys\\elegant-tendril-245600-75201e93f704.json"
+SECRET_NAME = "projects/elegant-tendril-245600/secrets/supply_manager_service_account/versions/latest"
+LOCAL_CREDENTIALS_FILE = "C:\\Users\\Gergo_PC\\Documents\\code\\service_acct_keys\\elegant-tendril-245600-75201e93f704.json"
 
 
 class GoogleSheetsClient:
     def __init__(self):
-        self.gc = gspread.service_account(filename=CREDENTIALS_FILE)
+        if os.getenv("RUNNING_IN_CLOUD"):
+            credentials_json = self.get_credentials_from_secret_manager()
+        else:
+            with open(LOCAL_CREDENTIALS_FILE) as f:
+                credentials_json = json.load(f)
+        self.gc = gspread.service_account_from_dict(credentials_json)
         self.spreadsheet = self.gc.open(SPREADSHEET)
+
+    def get_credentials_from_secret_manager(self):
+        client = secretmanager.SecretManagerServiceClient()
+        response = client.access_secret_version(name=SECRET_NAME)
+        return json.loads(response.payload.data.decode("UTF-8"))
 
     def get_worksheet(self, sheet_name):
         try:
