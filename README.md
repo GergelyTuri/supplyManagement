@@ -15,14 +15,14 @@ The list of the required packages is in the `requirements.txt` file.
 
 1. activate the environment
 
-### FastApi
+### FastApi Development
 
 This command should be run from the root directory of the project.
 ```bash
 uvicorn app.main:app --reload
 ```
 
-### Streamlit
+### Streamlit Development
 
 This command should be run from the `/streamlit_app` directory.
 ```bash
@@ -31,10 +31,10 @@ streamlit run app.py
 
 ## Production setup
 
-### FastApi
+### FastApi production
 
-This is currently running on Google Cloud.
+This is currently running on Google Cloud. [The running backend can be found here](https://elegant-tendril-245600.ue.r.appspot.com/).
 
-### Streamlit
+### Streamlit production
 
-This is currently running on Steramlit Community Cloud.
+This is currently running on Steramlit Community Cloud. The webapp can be found [here](https://supplymanagement-4ygoqikkk8rwjzzi4esa2h.streamlit.app/).
