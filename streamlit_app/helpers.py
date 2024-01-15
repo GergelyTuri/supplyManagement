@@ -6,7 +6,7 @@ import streamlit as st
 
 
 class FastAPIClient:
-    BASE_URL = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8000")
+    BASE_URL = st.secrets.get("PRODUCTION_URL", "http://127.0.0.1:8000")
 
     @staticmethod
     def fetch_all_data(sheet_name):
