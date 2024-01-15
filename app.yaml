@@ -1,4 +1,6 @@
 # FastAPI app settings on Google App Engine. This is required for Google Cloud deployment.
+# This file is not used for the frontend Streamlit app during deployment.
+
 runtime: python39
 
 entrypoint: uvicorn app.main:app --host=0.0.0.0 --port=$PORT

@@ -11,16 +11,20 @@ This is a supply management system for a small lab. It is built using FastApi fr
 Anaconda is recommended for installation.
 The list of the required packages is in the `requirements.txt` file.
 
-## Usage
+## Local Development and Usage
 
 1. activate the environment
 
 ### FastApi
+
+This command should be run from the root directory of the project.
 ```bash
 uvicorn app.main:app --reload
 ```
 
 ### Streamlit
+
+This command should be run from the `/streamlit_app` directory.
 ```bash
 streamlit run app.py
 ```

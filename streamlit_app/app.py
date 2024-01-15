@@ -1,3 +1,6 @@
+"""
+This is the main file for the Streamlit application. It manages the UI.
+"""
 import pandas as pd
 import streamlit as st
 from helpers import FastAPIClient, Styling
